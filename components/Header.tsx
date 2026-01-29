@@ -1,15 +1,11 @@
 "use client";
 
 import { Search, UserCircle2, Bell, LogOut, Settings, ChevronDown } from "lucide-react";
-import { usePersonaStore, type Persona } from "../src/store/personaStore";
 import { useAuthStore } from "../src/store/authStore";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-const personas: Persona[] = ["Importer", "Owner"];
-
 export const Header = () => {
-  const { persona, setPersona } = usePersonaStore();
   const { logout, user } = useAuthStore();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -58,43 +54,21 @@ export const Header = () => {
           {/* Right Section */}
           <div className="flex items-center gap-3">
 
-            {/* Persona Selector */}
+            {/* User Role Display */}
             <div className="hidden items-center gap-3 md:flex">
               <div className="text-right">
                 <div className="text-[10px] uppercase tracking-wider text-slate-400 font-medium">
-                  View As
+                  Logged in as
                 </div>
-                <div className="text-sm font-semibold text-slate-700">{persona}</div>
-              </div>
-              <div className="relative">
-                <select
-                  value={persona}
-                  onChange={(e) => setPersona(e.target.value as Persona)}
-                  className="appearance-none rounded-lg border border-slate-200 bg-white px-3 py-2 pr-8 text-sm font-medium text-slate-700 shadow-sm hover:border-slate-300 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-100 transition-all duration-200 cursor-pointer"
-                >
-                  {personas.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <div className="text-sm font-semibold text-slate-700 capitalize">{user?.role}</div>
               </div>
             </div>
 
-            {/* Mobile Persona Selector */}
+            {/* Mobile User Role Display */}
             <div className="md:hidden">
-              <select
-                value={persona}
-                onChange={(e) => setPersona(e.target.value as Persona)}
-                className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-700 shadow-sm focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-100"
-              >
-                {personas.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
+              <div className="text-xs font-medium text-slate-700 capitalize bg-slate-100 px-2 py-1 rounded">
+                {user?.role}
+              </div>
             </div>
 
             {/* Notifications */}
@@ -112,10 +86,10 @@ export const Header = () => {
               </div>
               <div className="hidden md:block">
                 <div className="text-xs font-medium text-slate-900">
-                  {user?.username || (persona === "Importer" ? "Nagoya Imports Ltd" : "Owner Wallet")}
+                  {user?.username}
                 </div>
-                <div className="text-[10px] text-slate-500 uppercase tracking-wide">
-                  {persona === "Importer" ? "Import Manager" : "Vehicle Owner"}
+                <div className="text-[10px] text-slate-500 uppercase tracking-wide capitalize">
+                  {user?.role}
                 </div>
               </div>
             </div>

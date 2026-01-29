@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { ArrowRight, ExternalLink, Eye, FileText, Clock } from "lucide-react";
-import { vehicles } from "../src/lib/mockData";
+import { getVehiclesForUser } from "../src/lib/mockData";
 import { StatusBadge, RiskPill } from "./StatusBadge";
-import { usePersonaStore } from "../src/store/personaStore";
+import { useAuthStore } from "../src/store/authStore";
 import { useState, useEffect } from "react";
 
 export const VehicleTable = () => {
-  const { persona } = usePersonaStore();
+  const { user } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
@@ -18,10 +18,7 @@ export const VehicleTable = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const visibleVehicles =
-    persona === "Importer"
-      ? vehicles
-      : vehicles.filter((v) => v.ownerRoleView === "Owner");
+  const visibleVehicles = user ? getVehiclesForUser(user.role) : [];
 
   if (isLoading) {
     return (
@@ -55,10 +52,10 @@ export const VehicleTable = () => {
       <div className="flex items-center justify-between border-b border-slate-200/60 px-6 py-4">
         <div>
           <h2 className="text-lg font-semibold text-slate-900">
-            {persona === "Importer" ? "Active Fleet" : "My Vehicle Wallet"}
+            {user?.role === "importer" ? "Active Fleet" : "My Vehicle Wallet"}
           </h2>
           <p className="text-sm text-slate-500 mt-1">
-            {persona === "Importer"
+            {user?.role === "importer"
               ? "End-to-end visibility from auction to DVLA registration."
               : "Digital wallet showing your imported vehicle and provenance."}
           </p>
@@ -83,7 +80,7 @@ export const VehicleTable = () => {
         <table
           className="min-w-full divide-y divide-slate-200/60"
           role="table"
-          aria-label={`${persona === "Importer" ? "Active Fleet" : "My Vehicle Wallet"} table`}
+          aria-label={`${user?.role === "importer" ? "Active Fleet" : "My Vehicle Wallet"} table`}
         >
           <thead className="bg-slate-50/80">
             <tr className="text-xs uppercase tracking-wider text-slate-500">
@@ -96,7 +93,7 @@ export const VehicleTable = () => {
               <th scope="col" className="px-6 py-3 text-left font-medium">
                 Status
               </th>
-              {persona === "Importer" && (
+              {user?.role === "importer" && (
                 <th scope="col" className="px-6 py-3 text-left font-medium">
                   Risk Level
                 </th>
@@ -133,7 +130,7 @@ export const VehicleTable = () => {
                 <td className="px-6 py-4">
                   <StatusBadge status={vehicle.status} />
                 </td>
-                {persona === "Importer" && (
+                {user?.role === "importer" && (
                   <td className="px-6 py-4">
                     <RiskPill risk={vehicle.riskLevel} />
                   </td>
@@ -161,7 +158,7 @@ export const VehicleTable = () => {
             {visibleVehicles.length === 0 && (
               <tr>
                 <td
-                  colSpan={persona === "Importer" ? 5 : 4}
+                  colSpan={user?.role === "importer" ? 5 : 4}
                   className="px-6 py-12 text-center"
                 >
                   <div className="flex flex-col items-center gap-3">
@@ -171,7 +168,7 @@ export const VehicleTable = () => {
                     <div>
                       <div className="text-sm font-medium text-slate-900">No vehicles found</div>
                       <div className="text-xs text-slate-500 mt-1">
-                        No vehicles are visible for this persona in the demo dataset.
+                        No vehicles are visible for your account in the demo dataset.
                       </div>
                     </div>
                   </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-import { vehicles } from "../src/lib/mockData";
-import { usePersonaStore } from "../src/store/personaStore";
+import { getVehiclesForUser } from "../src/lib/mockData";
+import { useAuthStore } from "../src/store/authStore";
 import { useState, useEffect } from "react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
@@ -52,7 +52,7 @@ const CustomLegend = ({ payload }: any) => {
 };
 
 export const StatusChart = () => {
-  const { persona } = usePersonaStore();
+  const { user } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
@@ -62,9 +62,7 @@ export const StatusChart = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const visibleVehicles = persona === "Importer"
-    ? vehicles
-    : vehicles.filter((v) => v.ownerRoleView === "Owner");
+  const visibleVehicles = user ? getVehiclesForUser(user.role) : [];
 
   const statusCounts = visibleVehicles.reduce((acc, v) => {
     acc[v.status] = (acc[v.status] || 0) + 1;
@@ -112,7 +110,7 @@ export const StatusChart = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">
-            {persona === "Importer" ? "Vehicle Status Distribution" : "My Vehicle Status"}
+            {user?.role === "importer" ? "Vehicle Status Distribution" : "My Vehicle Status"}
           </h3>
           <p className="text-sm text-slate-500 mt-1">
             Total: {totalVehicles} vehicle{totalVehicles !== 1 ? 's' : ''}

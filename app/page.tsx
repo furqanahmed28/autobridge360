@@ -4,18 +4,19 @@ import { DashboardMetrics } from "../components/DashboardMetrics";
 import { VehicleTable } from "../components/VehicleTable";
 import { RiskGauge } from "../components/RiskGauge";
 import { StatusChart } from "../components/StatusChart";
-import { vehicles } from "../src/lib/mockData";
-import { usePersonaStore } from "../src/store/personaStore";
+import { getVehiclesForUser } from "../src/lib/mockData";
+import { useAuthStore } from "../src/store/authStore";
 import { useEffect, useState } from "react";
 
-function getReferenceVehicleRisk() {
-  const harrier = vehicles.find((v) => v.id === "harrier-2022");
-  return harrier?.riskScore ?? 72;
+function getReferenceVehicleRisk(userRole: "importer" | "owner" | undefined) {
+  const vehicles = userRole ? getVehiclesForUser(userRole) : [];
+  const referenceVehicle = vehicles.find((v) => v.id === (userRole === "owner" ? "harrier-2022" : "note-2018"));
+  return referenceVehicle?.riskScore ?? 72;
 }
 
 export default function DashboardPage() {
-  const { persona } = usePersonaStore();
-  const score = getReferenceVehicleRisk();
+  const { user } = useAuthStore();
+  const score = getReferenceVehicleRisk(user?.role);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -28,10 +29,10 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-slate-900 md:text-3xl tracking-tight">
-            {persona === "Importer" ? "Import Command Center" : "Digital Vehicle Wallet"}
+            {user?.role === "importer" ? "Import Command Center" : "Digital Vehicle Wallet"}
           </h1>
           <p className="text-base text-slate-600 max-w-2xl leading-relaxed">
-            {persona === "Importer"
+            {user?.role === "importer"
               ? "Follow a vehicle from Japanese auction to UK ownership with full provenance and risk visibility."
               : "Personal dashboard showing your imported vehicle, service history, and ownership metrics."}
           </p>
@@ -66,11 +67,11 @@ export default function DashboardPage() {
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-slate-900">
-              {persona === "Importer" ? "Risk Analysis" : "Status Overview"}
+              {user?.role === "importer" ? "Risk Analysis" : "Status Overview"}
             </h2>
             <div className="h-px bg-gradient-to-r from-slate-300 to-transparent flex-1"></div>
           </div>
-          {persona === "Importer" ? (
+          {user?.role === "importer" ? (
             <RiskGauge score={score} />
           ) : (
             <StatusChart />

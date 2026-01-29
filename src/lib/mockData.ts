@@ -1,4 +1,5 @@
 export type UserRole = "Importer" | "Exporter" | "Owner" | "Garage" | "Admin";
+export type AuthUserRole = "importer" | "owner";
 
 export type RiskLevel = "Low" | "Medium" | "High" | "Pending";
 
@@ -1009,4 +1010,41 @@ export const shipmentDetails: ShipmentDetail[] = [
     destinationPort: "Southampton"
   }
 ];
+
+// Separate data for importer and owner users
+const importerVehicles = vehicles.filter(v => v.id !== "harrier-2022" && v.id !== "prius-2016" && v.id !== "outlander-2019");
+const ownerVehicles = vehicles.filter(v => v.id === "harrier-2022" || v.id === "prius-2016" || v.id === "outlander-2019");
+
+const importerServiceRecords = serviceRecords.filter(s => importerVehicles.some(v => v.id === s.vehicleId));
+const ownerServiceRecords = serviceRecords.filter(s => ownerVehicles.some(v => v.id === s.vehicleId));
+
+const importerProvenanceEvents = provenanceEvents.filter(e => importerVehicles.some(v => v.id === e.vehicleId));
+const ownerProvenanceEvents = provenanceEvents.filter(e => ownerVehicles.some(v => v.id === e.vehicleId));
+
+const importerComplianceDocuments = complianceDocuments.filter(d => importerVehicles.some(v => v.id === d.vehicleId));
+const ownerComplianceDocuments = complianceDocuments.filter(d => ownerVehicles.some(v => v.id === d.vehicleId));
+
+const importerShipmentDetails = shipmentDetails.filter(s => importerVehicles.some(v => v.id === s.vehicleId));
+const ownerShipmentDetails = shipmentDetails.filter(s => ownerVehicles.some(v => v.id === s.vehicleId));
+
+// Functions to get user-specific data
+export const getVehiclesForUser = (userRole: AuthUserRole): Vehicle[] => {
+  return userRole === "importer" ? importerVehicles : ownerVehicles;
+};
+
+export const getServiceRecordsForUser = (userRole: AuthUserRole): ServiceRecord[] => {
+  return userRole === "importer" ? importerServiceRecords : ownerServiceRecords;
+};
+
+export const getProvenanceEventsForUser = (userRole: AuthUserRole): ProvenanceEvent[] => {
+  return userRole === "importer" ? importerProvenanceEvents : ownerProvenanceEvents;
+};
+
+export const getComplianceDocumentsForUser = (userRole: AuthUserRole): ComplianceDocument[] => {
+  return userRole === "importer" ? importerComplianceDocuments : ownerComplianceDocuments;
+};
+
+export const getShipmentDetailsForUser = (userRole: AuthUserRole): ShipmentDetail[] => {
+  return userRole === "importer" ? importerShipmentDetails : ownerShipmentDetails;
+};
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { AlertTriangle, BarChart3, Car, Ship, Wrench, CheckCircle, TrendingUp, TrendingDown } from "lucide-react";
-import { vehicles } from "../src/lib/mockData";
-import { usePersonaStore } from "../src/store/personaStore";
+import { getVehiclesForUser } from "../src/lib/mockData";
+import { useAuthStore } from "../src/store/authStore";
 import { useState, useEffect } from "react";
 
 interface MetricCardProps {
@@ -94,7 +94,7 @@ const MetricCard = ({ title, value, icon: Icon, subtitle, trend, isLoading }: Me
 };
 
 export const DashboardMetrics = () => {
-  const { persona } = usePersonaStore();
+  const { user } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -103,17 +103,19 @@ export const DashboardMetrics = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (persona === "Importer") {
-    const totalFleet = vehicles.length;
-    const inTransit = vehicles.filter((v) =>
+  const visibleVehicles = user ? getVehiclesForUser(user.role) : [];
+
+  if (user?.role === "importer") {
+    const totalFleet = visibleVehicles.length;
+    const inTransit = visibleVehicles.filter((v) =>
       ["Shipping", "At Port - Nagoya", "Customs Clearance"].includes(v.status)
     ).length;
-    const complianceAlerts = vehicles.filter(
+    const complianceAlerts = visibleVehicles.filter(
       (v) => v.riskLevel === "High" || v.riskLevel === "Medium"
     ).length;
     const avgRiskScore =
-      vehicles.reduce((sum, v) => sum + (v.riskScore || 0), 0) /
-      (vehicles.length || 1);
+      visibleVehicles.reduce((sum, v) => sum + (v.riskScore || 0), 0) /
+      (visibleVehicles.length || 1);
 
     const cards = [
       {
@@ -161,27 +163,26 @@ export const DashboardMetrics = () => {
     );
   } else {
     // Owner persona metrics
-    const ownedVehicles = vehicles.filter((v) => v.ownerRoleView === "Owner");
-    const registeredVehicles = ownedVehicles.filter((v) => v.status === "Registered").length;
-    const serviceDueCount = ownedVehicles.filter((v) => v.riskLevel === "Medium").length;
-    const avgVehicleAge = ownedVehicles.length > 0
-      ? ownedVehicles.reduce((sum, v) => sum + (2025 - v.year), 0) / ownedVehicles.length
+    const registeredVehicles = visibleVehicles.filter((v) => v.status === "Registered").length;
+    const serviceDueCount = visibleVehicles.filter((v) => v.riskLevel === "Medium").length;
+    const avgVehicleAge = visibleVehicles.length > 0
+      ? visibleVehicles.reduce((sum, v) => sum + (2025 - v.year), 0) / visibleVehicles.length
       : 0;
 
     const cards = [
       {
         title: "My Vehicles",
-        value: ownedVehicles.length,
+        value: visibleVehicles.length,
         icon: Car,
         subtitle: "Vehicles in your wallet",
-        trend: ownedVehicles.length > 1 ? 'up' : 'neutral' as const
+        trend: visibleVehicles.length > 1 ? 'up' : 'neutral' as const
       },
       {
         title: "Registered",
         value: registeredVehicles,
         icon: CheckCircle,
         subtitle: "DVLA registered vehicles",
-        trend: registeredVehicles === ownedVehicles.length ? 'up' : 'neutral' as const
+        trend: registeredVehicles === visibleVehicles.length ? 'up' : 'neutral' as const
       },
       {
         title: "Service Due",

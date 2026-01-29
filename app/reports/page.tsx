@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
-import { vehicles, provenanceEvents, type Vehicle, type ProvenanceEvent } from "../../src/lib/mockData";
-import { usePersonaStore } from "../../src/store/personaStore";
+import { getVehiclesForUser, getProvenanceEventsForUser, type Vehicle, type ProvenanceEvent } from "../../src/lib/mockData";
+import { useAuthStore } from "../../src/store/authStore";
 
 const reportTypes = [
   { id: "inventory", label: "Vehicle Inventory" },
@@ -14,11 +14,10 @@ const reportTypes = [
 
 export default function ReportsPage() {
   const [activeReport, setActiveReport] = useState("inventory");
-  const { persona } = usePersonaStore();
+  const { user } = useAuthStore();
 
-  const visibleVehicles = persona === "Importer"
-    ? vehicles
-    : vehicles.filter((v) => v.ownerRoleView === "Owner");
+  const visibleVehicles = user ? getVehiclesForUser(user.role) : [];
+  const visibleEvents = user ? getProvenanceEventsForUser(user.role) : [];
 
   const renderReport = () => {
     switch (activeReport) {
@@ -29,7 +28,7 @@ export default function ReportsPage() {
       case "risk":
         return <RiskAnalysisReport vehicles={visibleVehicles} />;
       case "shipment":
-        return <ShipmentTrackingReport vehicles={visibleVehicles} events={provenanceEvents} />;
+        return <ShipmentTrackingReport vehicles={visibleVehicles} events={visibleEvents} />;
       default:
         return null;
     }
@@ -153,7 +152,7 @@ function VehicleInventoryReport({ vehicles }: { vehicles: Vehicle[] }) {
   );
 }
 
-function ComplianceStatusReport({ vehicles }: { vehicles: typeof vehicles }) {
+function ComplianceStatusReport({ vehicles }: { vehicles: Vehicle[] }) {
   const complianceData = [
     { month: "Jan", compliant: 85, nonCompliant: 15 },
     { month: "Feb", compliant: 90, nonCompliant: 10 },
