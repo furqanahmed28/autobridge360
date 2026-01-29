@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-slate-900 antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .erp-card {
+    @apply rounded-xl border border-slate-200/60 bg-white shadow-sm transition-all duration-200 hover:shadow-md hover:border-slate-300/60;
+  }
+
+  .erp-card-hover {
+    @apply hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300;
+  }
+
+  .erp-button-primary {
+    @apply bg-slate-900 text-white hover:bg-slate-800 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors duration-200;
+  }
+
+  .erp-button-secondary {
+    @apply bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors duration-200;
+  }
+
+  .erp-input {
+    @apply border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors duration-200;
+  }
+
+  .erp-loading-skeleton {
+    @apply animate-pulse bg-slate-200 rounded;
+  }
+
+  .erp-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .erp-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

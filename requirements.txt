@@ -1,0 +1,210 @@
+AutoBridge360 – Prototype Requirements Document
+1. Purpose of This Document
+This document defines what is required in the AutoBridge360 prototype based on the approved business plan. The prototype is not a full product, but a proof-of-capability system designed to:
+•	Demonstrate the core value proposition to investors, regulators, and early partners
+•	Validate technical feasibility of key innovations
+•	Support UK Innovator / Founder visa and funding discussions
+•	Enable early pilot discussions with importers, exporters, and garages
+________________________________________
+2. Prototype Objectives (What the Prototype Must Prove)
+The prototype must clearly demonstrate:
+1.	End-to-end vehicle lifecycle continuity (import → compliance → ownership)
+2.	AI-driven automation replacing manual workflows
+3.	Trust, provenance, and risk visibility unavailable in existing tools
+4.	Clear differentiation vs. point solutions (VIN checks, spreadsheets, portals)
+The prototype does not need full-scale automation or live regulatory integrations.
+________________________________________
+3. Scope Definition
+3.1 Included in Prototype
+•	Limited number of vehicles (demo + pilot data)
+•	Simulated or semi-manual integrations where required
+•	Core workflows for one primary market (UK)
+•	Web-based dashboards (desktop-first)
+3.2 Explicitly Out of Scope (for Prototype)
+•	Full DVLA live integration
+•	Real payment processing
+•	Large-scale marketplace liquidity
+•	Full mobile apps (responsive web acceptable)
+•	Multi-country regulatory coverage
+________________________________________
+4. User Roles Required in Prototype
+The prototype must support role-based access for the following personas:
+1.	Importer (Primary User)
+2.	Exporter (Japanese-side user)
+3.	Vehicle Owner (Post-import)
+4.	Garage Partner (After-sales)
+5.	Admin / Platform Operator
+Each role should see only relevant data and actions.
+________________________________________
+5. Core Prototype Modules & Requirements
+5.1 Vehicle Identity & Provenance Core (Mandatory)
+Objective
+Demonstrate the End-to-End Vehicle Provenance Graph™ concept.
+Functional Requirements
+•	Unique vehicle profile created using:
+o	Chassis number
+o	Engine number (optional)
+o	Auction reference
+•	Timeline-based lifecycle view with events:
+o	Auction listing
+o	Export documentation
+o	Shipment
+o	UK arrival
+o	Registration status
+o	Service events
+Output
+•	Visual timeline or graph-style view
+•	Immutable event history (edit tracked)
+•	Document-linked events
+________________________________________
+5.2 AI Document Processing (Prototype-Level)
+Objective
+Prove reduction of manual data entry and translation errors.
+Functional Requirements
+•	Upload of sample documents:
+o	Export Certificate (Japanese)
+o	Auction Sheet
+o	Invoice / Bill of Lading
+•	OCR extraction of:
+o	Chassis number
+o	Mileage
+o	Auction grade
+o	Exporter name
+•	Auto-mapped structured fields
+•	Confidence score per extracted field
+Acceptable for Prototype
+•	Pre-trained OCR or third-party OCR API
+•	Manual correction UI
+________________________________________
+5.3 Compliance Engine (UK – Rules-Based)
+Objective
+Show pre-emptive compliance validation before port arrival.
+Functional Requirements
+•	Rule checks for:
+o	Vehicle age
+o	Document completeness
+o	Chassis consistency across documents
+•	Pass / fail status per vehicle
+•	Human-readable compliance feedback
+Prototype Notes
+•	Rules can be hard-coded or config-based
+•	No live customs submission required
+________________________________________
+5.4 Shipment & Port Visibility (Simulated)
+Objective
+Show single-pane visibility instead of emails and spreadsheets.
+Functional Requirements
+•	Shipment timeline with statuses:
+o	Booked
+o	In transit
+o	Arrived
+o	Cleared
+•	Estimated arrival date (static or mock ML)
+•	Shared visibility for importer & exporter
+________________________________________
+5.5 Importer Dashboard (Critical)
+Required Views
+•	Vehicle list with status badges
+•	Compliance alerts
+•	Document completeness indicator
+•	Risk score snapshot
+Key Actions
+•	Upload documents
+•	View compliance issues
+•	Track shipment
+________________________________________
+5.6 Adaptive Multi-Sided Risk Score (AMRS – Prototype)
+Objective
+Demonstrate risk unification, not accuracy.
+Functional Requirements
+•	Single risk score per vehicle (0–100)
+•	Breakdown into:
+o	Compliance risk
+o	Document integrity risk
+o	Mileage anomaly risk
+•	Different views:
+o	Importer view (operational)
+o	Insurer view (simplified)
+Prototype Implementation
+•	Rule-weighted scoring acceptable
+________________________________________
+5.7 Ownership Handover & Digital Vehicle Wallet
+Objective
+Prove lifecycle continuity after import.
+Functional Requirements
+•	Transfer vehicle to "Owner" role
+•	Owner dashboard showing:
+o	Import history
+o	Documents
+o	Service recommendations
+________________________________________
+5.8 Predictive Maintenance (Lightweight)
+Objective
+Show import-linked intelligence continues post-sale.
+Functional Requirements
+•	Rule-based service recommendation
+•	Example alerts:
+o	First service window
+o	Battery check suggestion
+•	Ability to log completed service
+________________________________________
+5.9 Garage Interface (Basic)
+Functional Requirements
+•	View assigned vehicles
+•	Log service event
+•	Upload service document
+•	Event added to provenance timeline
+________________________________________
+6. Non-Functional Requirements
+6.1 Security & Trust
+•	Role-based access control
+•	Audit trail for document changes
+•	Timestamped events
+6.2 UX Expectations
+•	Clean, professional B2B interface
+•	Timeline-based storytelling of vehicle history
+•	Clear differentiation from spreadsheets & portals
+6.3 Performance
+•	Fast document upload
+•	Near-instant compliance feedback
+________________________________________
+7. Data Requirements for Prototype
+Required Data Types
+•	Demo Japanese vehicle documents
+•	Sample auction data
+•	Mock shipment timelines
+•	Example service records
+Data Handling
+•	Pseudonymised
+•	Non-production regulatory data
+________________________________________
+8. Technical Architecture (Prototype-Level)
+Suggested Stack (Indicative)
+•	Frontend: React / Next.js
+•	Backend: Django / Node.js
+•	Database:
+o	Relational DB (core data)
+o	Graph DB (optional but preferred)
+•	OCR: Third-party API
+•	Hosting: Cloud (AWS / GCP / Azure)
+________________________________________
+9. Prototype Success Criteria
+The prototype is successful if:
+•	A demo user can follow one vehicle from auction to owner
+•	Compliance issues are detected before arrival
+•	Provenance history is clearly understandable
+•	Risk score is explainable
+•	Investors immediately grasp differentiation
+________________________________________
+10. Deliverables
+1.	Working web prototype
+2.	Demo dataset (5–10 vehicles)
+3.	Investor demo flow
+4.	Screenshots for pitch decks
+5.	Technical architecture summary
+________________________________________
+11. Positioning Statement for Prototype
+"This prototype demonstrates how AutoBridge360 replaces fragmented vehicle import and ownership workflows with a single intelligent lifecycle platform — turning documents into trust, and imports into long-term value."
+________________________________________
+End of Prototype Requirements Document
+
